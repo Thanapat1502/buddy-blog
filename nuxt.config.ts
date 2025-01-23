@@ -11,7 +11,11 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "shadcn-nuxt",
+    "vue3-carousel-nuxt",
+  ],
   
   // เพิ่ม runtimeConfig
   runtimeConfig: {

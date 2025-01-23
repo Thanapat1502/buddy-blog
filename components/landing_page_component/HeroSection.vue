@@ -12,11 +12,34 @@
           Inspiration and Information.
         </p>
       </div>
-      <img
-        src=""
-        alt="Person with a cat"
-        class="h-[530px] object-cover rounded-lg shadow-lg lg:w-1/3 mx-4 mb-8 lg:mb-0" />
-      <div class="lg:w-1/3 lg:pl-8">
+     
+      <!-- Carousel -->
+      <Carousel>
+          <Slide class="bg-red-400 h-[530px] w-10 shadow-lg lg:w-10 mx-4 mb-8 lg:mb-0">
+             <img src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg" 
+             alt="Person with a cat" 
+             class="h-full w-96 rounded-xl object-cover"/>      
+          </Slide>
+          <Slide class="bg-red-400 h-[530px] w-10 shadow-lg lg:w-10 mx-4 mb-8 lg:mb-0">
+             <img src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg" 
+             alt="Person with a cat" 
+             class="h-full w-96 rounded-xl object-cover"/>      
+          </Slide>
+          <Slide class="bg-red-400 h-[530px] w-10 shadow-lg lg:w-10 mx-4 mb-8 lg:mb-0">
+             <img src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg" 
+             alt="Person with a cat" 
+             class="h-full w-96 rounded-xl object-cover"/>      
+          </Slide>
+          <Slide class="bg-red-400 h-[530px] w-10 shadow-lg lg:w-10 mx-4 mb-8 lg:mb-0">
+             <img src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg" 
+             alt="Person with a cat" 
+             class="h-full w-96 rounded-xl object-cover"/>      
+          </Slide>
+          <Navigation />
+          <Pagination />
+        </Carousel>
+      
+        <div class="lg:w-1/3 lg:pl-8">
         <h2 class="text-xl font-semibold mb-2">-Author</h2>
         <h3 class="text-2xl font-bold mb-4">Thompson P.</h3>
         <p class="text-muted-foreground mb-4">
