@@ -42,6 +42,15 @@
       </div>
     </nav>
   </div>
+  <!-- -->
+
+  <div
+    class="gride-area flex flex-col justify-center items-center px-4 pt-6 pb-20 gap-12 lg:grid lg:grid-cols-2 lg:container lg:mx-auto">
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+  </div>
 
   <!--Area -->
 </template>
@@ -54,6 +63,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ArticleCard from "@/components/landing_page_component/ArticleCard.vue";
 export default {
   name: "ArticleSection",
   data() {
@@ -61,6 +71,13 @@ export default {
       mockCatagory: ["Highlight", "Inspiration", "Cat", "Space"],
     };
   },
-  components: { Select, SelectContent, SelectItem, SelectTrigger, SelectValue },
+  components: {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+    ArticleCard,
+  },
 };
 </script>

@@ -8,11 +8,8 @@
           <input
             type="text"
             placeholder="Search"
-            onChange="{handleSearchInput}"
             class="border rounded-lg py-3 px-4 w-full" />
-          <button
-            class="absolute right-3 top-4 cursor-pointer"
-            onClick="{handleSearchButton}">
+          <button class="absolute right-3 top-4 cursor-pointer">
             <SearchIcon />
           </button>
         </div>
@@ -30,19 +27,6 @@
             </SelectContent>
           </Select>
         </div>
-        <!-- <div class="category-dropdown-main rounded-lg py-3 px-4 relative hidden lg:flex lg:items-center">
-            {categoryOptions.map((item, index) => {
-              return (
-                <button
-                  key={index}
-                  onClick={handleCategoryButton}
-                  value={item}
-                  class={`font-medium text-base rounded-lg hover:bg-[#DAD6D1] active:bg-[#F9F8F6] px-5 py-3`}>
-                  {item}
-                </button>
-              );
-            })}
-          </div> -->
       </div>
     </nav>
   </div>
