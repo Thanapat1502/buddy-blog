@@ -12,4 +12,12 @@ export default defineNuxtConfig({
   },
 
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt"],
+  
+  // เพิ่ม runtimeConfig
+  runtimeConfig: {
+    public: {
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_KEY: process.env.SUPABASE_KEY,
+    },
+  },
 });
