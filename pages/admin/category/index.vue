@@ -1,6 +1,28 @@
 <script setup lang="ts">
-import Sidebar from "@/components/admin/Sidebar.vue"; // Import Sidebar
-import MagnifyingGlass from "~/components/svg/admin/MagnifyingGlass.vue";
+import { ref, onMounted } from "vue";
+import axios from "axios"; // นำเข้า axios
+import Sidebar from "~/components/admin/Sidebar.vue";
+
+// ประกาศ type ของ category
+interface Category {
+  id: number; // หรืออาจจะเป็น string หาก id ของคุณเป็น string
+  name: string;
+}
+
+// สร้างตัวแปรที่จะเก็บข้อมูล category
+const categories = ref<Category[]>([]);
+console.log("fetching data category",categories)
+
+// ใช้ onMounted เพื่อดึงข้อมูลจาก API ตอนที่เปิดหน้า
+onMounted(async () => {
+  try {
+    // ปรับ URL API ตามที่คุณตั้งไว้
+    const response = await axios.get("/api/category");
+    categories.value = response.data; // เก็บข้อมูลลงใน categories
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+});
 </script>
 
 <template>
@@ -46,10 +68,10 @@ import MagnifyingGlass from "~/components/svg/admin/MagnifyingGlass.vue";
           <div class="flex flex-col border border-brown-300 rounded-xl">
             <table class="w-full">
               <!-- Table Header -->
-              <thead class=" ">
+              <thead>
                 <tr>
                   <th
-                    class="px-4 py-2 flex items-start font-normal shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]"
+                    class="px-4 py-2 flex justify-start items-center font-normal shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] h-[48px]"
                   >
                     Category
                   </th>
@@ -57,8 +79,12 @@ import MagnifyingGlass from "~/components/svg/admin/MagnifyingGlass.vue";
               </thead>
               <!-- Table Body -->
               <tbody>
-                <tr>
-                  <td class="px-4 py-2 flex items-start">1</td>
+                <tr v-for="category in categories" :key="category.id">
+                  <td
+                    class="px-4 py-2 flex justify-start items-center h-[64px]"
+                  >
+                    {{ category.name }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -68,5 +94,3 @@ import MagnifyingGlass from "~/components/svg/admin/MagnifyingGlass.vue";
     </main>
   </div>
 </template>
-
-<!-- justify-start items-center -->

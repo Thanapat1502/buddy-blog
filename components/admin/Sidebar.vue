@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router"; // ใช้ Vue Router
+import { useRoute, useRouter } from "vue-router"; // เพิ่ม useRouter
 import Article from "../svg/admin/Article.vue";
 import bbWebsite from "../svg/admin/bbWebsite.vue";
 import Category from "../svg/admin/Category.vue";
@@ -8,6 +8,7 @@ import Notification from "../svg/admin/Notification.vue";
 import Profile from "../svg/admin/Profile.vue";
 
 const route = useRoute(); // ใช้สำหรับตรวจสอบ path ปัจจุบัน
+const router = useRouter(); // ใช้สำหรับทำการ navigate
 </script>
 
 <template>
@@ -23,93 +24,81 @@ const route = useRoute(); // ใช้สำหรับตรวจสอบ pa
         <div class="">
           <div
             :class="[
-              'flex flex-row items-center pl-5 gap-2 transition duration-200 ',
+              'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
               route.path === '/admin/article'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
+            @click="router.push('/admin/article')" 
           >
             <Article />
-            <a
-              href="/admin/article"
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Article management
-            </a>
+            </div>
           </div>
           <div
             :class="[
-              'flex flex-row items-center pl-5 gap-2 transition duration-200',
+              'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
               route.path === '/admin/category'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
+            @click="router.push('/admin/category')" 
           >
             <Category />
-            <a
-              href="/admin/category"
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Category management
-            </a>
+            </div>
           </div>
           <div
             :class="[
-              'flex flex-row items-center pl-5 gap-2 transition duration-200',
+              'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
               route.path === '/admin/profile'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
+            @click="router.push('/admin/profile')" 
           >
             <Profile />
-            <a
-              href="/admin/profile"
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Profile
-            </a>
+            </div>
           </div>
           <div
             :class="[
-              'flex flex-row items-center pl-5 gap-2 transition duration-200',
+              'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
               route.path === '/admin/notification'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
+            @click="router.push('/admin/notification')" 
           >
             <Notification />
-            <a
-              href="/admin/notification"
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Notification
-            </a>
+            </div>
           </div>
         </div>
       </div>
       <div>
         <div
-          class="flex flex-row items-center pl-5 gap-2 hover:bg-brown-300 transition duration-200"
+          class="flex flex-row items-center pl-5 gap-2 hover:bg-brown-300 transition duration-200 cursor-pointer"
+          @click="router.push('/')"
         >
           <bbWebsite />
-          <a
-            href="/"
-            class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-          >
+          <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
             bb. website
-          </a>
+          </div>
         </div>
         <div class="w-full h-px bg-brown-300"></div>
         <div
-          class="flex flex-row items-center pl-5 gap-2 hover:bg-brown-300 transition duration-200"
+          class="flex flex-row items-center pl-5 gap-2 hover:bg-brown-300 transition duration-200 cursor-pointer"
+          @click="router.push('/logout')" 
         >
           <LogOut />
-          <a
-            href="/"
-            class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-          >
+          <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
             Log out
-          </a>
+          </div>
         </div>
       </div>
     </div>
