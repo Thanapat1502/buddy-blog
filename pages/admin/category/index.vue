@@ -43,19 +43,22 @@ import MagnifyingGlass from "~/components/svg/admin/MagnifyingGlass.vue";
               </div>
             </div>
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col border border-brown-300 rounded-xl">
             <table class="w-full">
               <!-- Table Header -->
-              <thead class="rounded-xl">
+              <thead class=" ">
                 <tr>
-                  <th class="px-4 py-2 border flex items-start font-normal">Category</th>
+                  <th
+                    class="px-4 py-2 flex items-start font-normal shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]"
+                  >
+                    Category
+                  </th>
                 </tr>
               </thead>
-
               <!-- Table Body -->
               <tbody>
                 <tr>
-                  <td class="px-4 py-2 border flex items-start">1</td>
+                  <td class="px-4 py-2 flex items-start">1</td>
                 </tr>
               </tbody>
             </table>
