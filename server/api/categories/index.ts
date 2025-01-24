@@ -7,8 +7,8 @@ export default defineEventHandler(async () => {
     .select("id, name");
 
   if (error) {
-    return { success: false, message: error.message };
+    return { success: false, statusCode: 400, message: error.message };
   }
 
-  return { success: true, categories };
+  return { success: true, statusCode: 200, categories };
 });

@@ -4,13 +4,16 @@ import { supabase } from "@/supabaseClient";
 export default defineEventHandler(async () => {
   const { data, error } = await supabase.from("posts").select(`
       id,
+      image,
       title,
       description,
       date,
       content,
       likes_count,
       categories (name),
-      statuses (status)`);
+      statuses (status),
+      author,
+      date`);
 
   if (error) {
     return { success: false, message: error.message };

@@ -59,7 +59,7 @@ class="h-[530px] object-cover rounded-lg shadow-lg lg:w-1/3 mx-4 mb-8 lg:mb-0" /
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import {
   Carousel,
   CarouselContent,
@@ -67,20 +67,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ref, onMounted } from "vue";
-import axios from "axios";
-// interface Posts {
-//   id: string;
-//   title: string;
-//   description: string;
-//   likesCount: number;
-//   category: string;
-//   status: string;
-// }
-// interface Category {
-//   id: string;
-//   name: string;
-// }
 
 export default {
   name: "HeroSection",
@@ -90,22 +76,6 @@ export default {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-  },
-  setup() {
-    const posts = ref([]);
-    const categories = ref([]);
-    onMounted(async () => {
-      try {
-        const respond = await axios.get("/api/allposts/getposts");
-        posts.value = respond.data.data;
-        const cateRes = await axios.get("/api/categories");
-        categories.value = cateRes.data.categories;
-        console.log(posts, categories);
-      } catch (e) {
-        console.log(e.message);
-      }
-    });
-    return { posts, categories };
   },
 };
 </script>

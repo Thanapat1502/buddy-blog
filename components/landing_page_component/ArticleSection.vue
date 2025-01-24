@@ -9,11 +9,8 @@
           <input
             type="text"
             placeholder="Search"
-            onChange="{handleSearchInput}"
             class="border rounded-lg py-3 px-4 w-full" />
-          <button
-            class="absolute right-3 top-4 cursor-pointer"
-            onClick="{handleSearchButton}">
+          <button class="absolute right-3 top-4 cursor-pointer">
             <SearchIcon />
           </button>
         </div>
@@ -24,8 +21,11 @@
               <SelectValue placeholder="Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem v-for="cate in mockCatagory" :key="cate">
-                {{ cate }}
+              <SelectItem
+                v-for="cate in refCategories"
+                :key="cate.id"
+                :value="cate.id">
+                {{ cate.name }}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -33,10 +33,11 @@
         <div
           class="category-dropdown-main rounded-lg py-3 px-4 relative hidden lg:flex lg:items-center">
           <button
-            v-for="item in mockCatagory"
-            :key="item"
+            v-for="cate in refCategories"
+            :key="cate.id"
+            :value="cate.id"
             class="font-medium text-base rounded-lg hover:bg-[#DAD6D1] active:bg-[#F9F8F6] px-5 py-3">
-            {{ item }}
+            {{ cate.name }}
           </button>
         </div>
       </div>
@@ -46,16 +47,15 @@
 
   <div
     class="gride-area flex flex-col justify-center items-center px-4 pt-6 pb-20 gap-12 lg:grid lg:grid-cols-2 lg:container lg:mx-auto">
-    <ArticleCard />
-    <ArticleCard />
-    <ArticleCard />
-    <ArticleCard />
+    <div v-for="post in refPosts">
+      <ArticleCard :post="post" />
+    </div>
   </div>
-
+  <div></div>
   <!--Area -->
 </template>
 
-<script>
+<script lang="ts">
 import {
   Select,
   SelectContent,
@@ -64,6 +64,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ArticleCard from "@/components/landing_page_component/ArticleCard.vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
+interface Category {
+  id: string;
+  name: string;
+}
+
 export default {
   name: "ArticleSection",
   data() {
@@ -78,6 +86,29 @@ export default {
     SelectTrigger,
     SelectValue,
     ArticleCard,
+  },
+  setup() {
+    const refPosts = ref([]);
+    const refCategories = ref([]);
+    onMounted(async () => {
+      console.log("mounted");
+      try {
+        const respond = await axios.get("/api/allposts/getposts");
+        refPosts.value = respond.data.data;
+        const cateRes = await axios.get("/api/categories");
+        refCategories.value = cateRes.data.categories;
+        console.log("posts: ", typeof refPosts, refPosts);
+        console.log("categories: ", typeof refCategories, refCategories);
+      } catch (e) {
+        const er = e as Error;
+        console.log(er.message);
+      }
+      console.log("fetched");
+    });
+    return {
+      refPosts,
+      refCategories,
+    };
   },
 };
 </script>
