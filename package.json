@@ -14,6 +14,7 @@
     "@nuxtjs/dotenv": "^1.4.2",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@supabase/supabase-js": "^2.48.0",
+    "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^12.5.0",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
