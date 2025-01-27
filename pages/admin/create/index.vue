@@ -105,7 +105,7 @@ onMounted(() => {
         <label for="thumbnail" class="block text-gray-700 font-medium mb-2">
           Thumbnail image
         </label>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-end space-x-4">
           <div
             class="flex justify-center items-center w-full max-w-lg h-80 px-6 py-20 border-2 border-gray-300 border-dashed rounded-md bg-gray-50"
           >
