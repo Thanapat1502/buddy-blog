@@ -12,9 +12,7 @@ const router = useRouter(); // ใช้สำหรับทำการ naviga
 </script>
 
 <template>
-  <aside
-    class="flex flex-col h-screen min-w-[280px] bg-brown-200 py-4 text-brown-400"
-  >
+  <aside class="flex flex-col h-screen min-w-[280px] bg-brown-200 py-4 text-brown-400">
     <div class="flex flex-col h-full w-full justify-between">
       <div class="">
         <div class="flex flex-col h-[212px] gap-3 justify-center px-5">
@@ -31,60 +29,52 @@ const router = useRouter(); // ใช้สำหรับทำการ naviga
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
-            @click="router.push('/admin/article')"
+            @click="router.push('/admin/article')" 
           >
             <Article />
-            <div
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Article management
             </div>
           </div>
           <div
             :class="[
               'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
-              route.path.includes('/admin/category')
+              route.path === '/admin/category'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
-            @click="router.push('/admin/category')"
+            @click="router.push('/admin/category')" 
           >
             <Category />
-            <div
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Category management
             </div>
           </div>
           <div
             :class="[
               'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
-              route.path.includes('/admin/profile')
+              route.path === '/admin/profile'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
-            @click="router.push('/admin/profile')"
+            @click="router.push('/admin/profile')" 
           >
             <Profile />
-            <div
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Profile
             </div>
           </div>
           <div
             :class="[
               'flex flex-row items-center pl-5 gap-2 transition duration-200 cursor-pointer',
-              route.path.includes('/admin/notification')
+              route.path === '/admin/notification'
                 ? 'bg-brown-300'
                 : 'hover:bg-brown-300',
             ]"
-            @click="router.push('/admin/notification')"
+            @click="router.push('/admin/notification')" 
           >
             <Notification />
-            <div
-              class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-            >
+            <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
               Notification
             </div>
           </div>
@@ -96,21 +86,17 @@ const router = useRouter(); // ใช้สำหรับทำการ naviga
           @click="router.push('/')"
         >
           <bbWebsite />
-          <div
-            class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-          >
+          <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
             bb. website
           </div>
         </div>
         <div class="w-full h-px bg-brown-300"></div>
         <div
           class="flex flex-row items-center pl-5 gap-2 hover:bg-brown-300 transition duration-200 cursor-pointer"
-          @click="router.push('/logout')"
+          @click="router.push('/logout')" 
         >
           <LogOut />
-          <div
-            class="flex flex-col justify-center text-brown-500 w-full h-[64px]"
-          >
+          <div class="flex flex-col justify-center text-brown-500 w-full h-[64px]">
             Log out
           </div>
         </div>
