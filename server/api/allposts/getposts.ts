@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
   if (category) {
     console.log(`test I`);
-    query = query.eq("categories.name", category);
+    query = query.eq("category_id", category);
   }
 
   if (keyword) {
@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
       .ilike("title", `%${keyword}%`)
       .eq("categories.name", category);
   }
+
   console.log("q3: ", query);
 
   const { data, error } = await query;
@@ -59,16 +60,3 @@ export default defineEventHandler(async (event) => {
 
   return { success: true, data };
 });
-
-// if (category && keyword) {
-//   query = query
-//     .ilike("title", `%${keyword}%`)
-//     .eq("categories.name", category);
-// }
-// if (category) {
-//   query = query.eq("categories.name", category);
-// }
-// if (keyword) {
-//   query = query.ilike("title", `%${keyword}%`);
-// }
-// query = query.limit(limit ?? 10);

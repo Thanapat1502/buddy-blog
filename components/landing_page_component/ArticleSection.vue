@@ -26,7 +26,7 @@
               <SelectItem
                 v-for="cate in refCate"
                 :key="cate.id"
-                :value="cate.name">
+                :value="cate.id">
                 {{ cate.name }}
               </SelectItem>
             </SelectContent>
@@ -40,7 +40,7 @@
             :value="cate.id"
             @click="
               () => {
-                handleCateClick(cate.name);
+                handleCateClick(cate.id);
               }
             "
             class="font-medium text-base rounded-lg hover:bg-[#DAD6D1] active:bg-[#F9F8F6] px-5 py-3">
@@ -77,17 +77,18 @@ import {
 const refPosts = ref([]);
 const refCate = ref([]);
 let postLimit = ref(10);
-let inputKeyword = ref("");
-let inputCate = ref("highlight");
+let inputKeyword = ref();
+let inputCate = ref();
 
 const handleSelector = (selectedValue: string) => {
-  inputCate.value = selectedValue.toLowerCase();
-  console.log(inputCate);
+  inputCate.value = Number(selectedValue);
+  //console.log(inputCate);
 };
 
 const handleCateClick = (value: string) => {
-  inputCate.value = value.toLowerCase();
-  console.log(inputCate);
+  console.log("check if value is num:", value);
+  inputCate.value = Number(value);
+  //console.log(inputCate);
 };
 
 const getAllPosts = async () => {
@@ -111,22 +112,22 @@ const getCategories = async () => {
   }
 };
 
-const filterPosts = async (newCate, newKeyword) => {
+const filterPosts = async (newCate: number, newKeyword: string) => {
   try {
     console.log("Filtered");
     let endpoint = ``;
-    if (inputCate.value !== "highlight" && inputKeyword.value.trim() !== "") {
-      console.log(`F Condition I`);
-      endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${inputCate.value}&keyword=${inputKeyword.value}`;
-    }
-    if (inputCate.value !== "highlight" && inputKeyword.value.trim() === "") {
-      console.log(`F Condition II`);
-      endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${inputCate.value}`;
-    }
-    if (inputCate.value === "highlight" && inputKeyword.value.trim() !== "") {
-      console.log(`F Condition III`);
-      endpoint = `/api/allposts/getposts?limit=${postLimit.value}&keyword=${inputKeyword.value}`;
-    }
+    // if (inputCate.value !== 0 && inputKeyword.value !== "") {
+    //   console.log(`F Condition I`);
+    //   endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${inputCate.value}&keyword=${inputKeyword.value}`;
+    // }
+    // if (inputCate.value !== 0 && inputKeyword.value === "") {
+    //   console.log(`F Condition II`);
+    // }
+    endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${newCate}`;
+    // if (inputCate.value === 0 && inputKeyword.value !== "") {
+    //   console.log(`F Condition III`);
+    //   endpoint = `/api/allposts/getposts?limit=${postLimit.value}&keyword=${inputKeyword.value}`;
+    // }
     console.log("endpoint: ");
     console.log(endpoint);
     const res = await axios.get(endpoint);
