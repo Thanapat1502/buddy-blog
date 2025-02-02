@@ -21,8 +21,8 @@ interface Article {
   };
 }
 
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,7 +40,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 
 const categories = ref<Category[]>([]);
@@ -64,30 +63,55 @@ const fetchArticles = async () => {
 };
 
 const isLoading = ref(true);
-const searchQuery = ref('');
-const selectedStatus = ref('');
-const selectedCategory = ref('');
+const searchQuery = ref("");
+const selectedStatus = ref("");
+const selectedCategory = ref("");
 
-// ใช้ computed property เพื่อกรองบทความตามเงื่อนไข
+// Pagination state
+const currentPage = ref(1);
+const perPage = ref(5); // จำนวนบทความต่อหน้า
+
+// กรองบทความตาม search, status และ category
 const filteredArticles = computed(() => {
-  return articles.value.filter(article => 
-    // ตรวจสอบว่า ชื่อบทความตรงกับคำค้นหาหรือไม่ (ไม่สนใจตัวพิมพ์ใหญ่/เล็ก)
-    article.title.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-
-    // ถ้ามีการเลือกสถานะให้กรองบทความที่สถานะตรงกับที่เลือก
-    // ถ้ายังไม่ได้เลือกสถานะ (selectedStatus เป็นค่าว่าง) จะไม่กรองสถานะ
-    (selectedStatus.value === '' || article.statuses.status === selectedStatus.value) &&
-
-    // ถ้ามีการเลือกหมวดหมู่ให้กรองบทความที่หมวดหมู่ตรงกับที่เลือก
-    // ถ้ายังไม่ได้เลือกหมวดหมู่ (selectedCategory เป็นค่าว่าง) จะไม่กรองหมวดหมู่
-    (selectedCategory.value === '' || article.categories.name === selectedCategory.value)
+  return articles.value.filter(
+    (article) =>
+      article.title.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
+      (selectedStatus.value === "" ||
+        article.statuses.status === selectedStatus.value) &&
+      (selectedCategory.value === "" ||
+        article.categories.name === selectedCategory.value)
   );
-})
+});
+
+// คำนวณหน้าที่จะแสดง
+const paginatedArticles = computed(() => {
+  const start = (currentPage.value - 1) * perPage.value;
+  const end = start + perPage.value;
+  return filteredArticles.value.slice(start, end);
+});
+
+// คำนวณจำนวนหน้าทั้งหมด
+const totalPages = computed(() => {
+  return Math.ceil(filteredArticles.value.length / perPage.value);
+});
+
+// ฟังก์ชันเปลี่ยนหน้า
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
 
 const handleDelete = async (id: number) => {
   try {
     await axios.delete(`/api/admin/article/${id}`);
-    articles.value = articles.value.filter(article => article.id !== id);
+    articles.value = articles.value.filter((article) => article.id !== id);
   } catch (error) {
     console.error(error);
   }
@@ -105,6 +129,7 @@ onMounted(async () => {
 });
 </script>
 
+
 <template>
   <div class="flex h-screen bg-gray-100">
     <main class="flex-1 p-8 overflow-auto">
@@ -116,14 +141,10 @@ onMounted(async () => {
       </div>
       <div class="flex space-x-4 mb-6">
         <div class="flex-1">
-          <Input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search..."
-          />
+          <Input v-model="searchQuery" type="text" placeholder="Search..." />
         </div>
         <Select v-model="selectedStatus">
-          <SelectTrigger class="w-[180px] py-3 rounded-sm text-muted-foreground focus:ring-0 focus:ring-offset-0 focus:border-muted-foreground">
+          <SelectTrigger class="w-[180px] py-3 rounded-sm text-muted-foreground">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -132,7 +153,7 @@ onMounted(async () => {
           </SelectContent>
         </Select>
         <Select v-model="selectedCategory">
-          <SelectTrigger class="w-[180px] py-3 rounded-sm text-muted-foreground focus:ring-0 focus:ring-offset-0 focus:border-muted-foreground">
+          <SelectTrigger class="w-[180px] py-3 rounded-sm text-muted-foreground">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
@@ -154,22 +175,14 @@ onMounted(async () => {
         <TableBody>
           <template v-if="isLoading">
             <TableRow v-for="index in 9" :key="index">
-              <TableCell>
-                <Skeleton class="h-6 w-[250px] bg-[#EFEEEB]" />
-              </TableCell>
-              <TableCell>
-                <Skeleton class="h-6 w-[150px] bg-[#EFEEEB]" />
-              </TableCell>
-              <TableCell>
-                <Skeleton class="h-6 w-[100px] bg-[#EFEEEB]" />
-              </TableCell>
-              <TableCell>
-                <Skeleton class="h-6 w-[50px] bg-[#EFEEEB]" />
-              </TableCell>
+              <TableCell><Skeleton class="h-6 w-[250px] bg-[#EFEEEB]" /></TableCell>
+              <TableCell><Skeleton class="h-6 w-[150px] bg-[#EFEEEB]" /></TableCell>
+              <TableCell><Skeleton class="h-6 w-[100px] bg-[#EFEEEB]" /></TableCell>
+              <TableCell><Skeleton class="h-6 w-[50px] bg-[#EFEEEB]" /></TableCell>
             </TableRow>
           </template>
-          <template v-else-if="filteredArticles.length > 0">
-            <TableRow v-for="article in filteredArticles" :key="article.id">
+          <template v-else-if="paginatedArticles.length > 0">
+            <TableRow v-for="article in paginatedArticles" :key="article.id">
               <TableCell class="font-medium">{{ article.title }}</TableCell>
               <TableCell>{{ article.categories.name }}</TableCell>
               <TableCell>
@@ -184,18 +197,10 @@ onMounted(async () => {
                 </span>
               </TableCell>
               <TableCell class="text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  @click="navigate(`/admin/article-management/edit/${article.id}`)"
-                >
+                <Button variant="ghost" size="sm" @click="navigate(`/admin/article-management/edit/${article.id}`)">
                   Edit
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  @click="handleDelete(article.id)"
-                >
+                <Button variant="ghost" size="sm" @click="handleDelete(article.id)">
                   Delete
                 </Button>
               </TableCell>
@@ -210,6 +215,17 @@ onMounted(async () => {
           </template>
         </TableBody>
       </Table>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-between items-center mt-6">
+        <Button :disabled="currentPage === 1" @click="prevPage">
+          ← Previous
+        </Button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <Button :disabled="currentPage >= totalPages" @click="nextPage">
+          Next →
+        </Button>
+      </div>
     </main>
   </div>
 </template>
