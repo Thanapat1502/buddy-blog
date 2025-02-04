@@ -6,6 +6,10 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 Make sure to install dependencies:
 
+## Domain Name
+
+https://buddy-blog-bb.vercel.app/
+
 ```bash
 # npm
 npm install

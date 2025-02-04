@@ -9,16 +9,15 @@
           <input
             type="text"
             placeholder="Search"
-            class="border rounded-lg py-3 px-4 w-full" />
+            class="border rounded-lg py-3 px-4 w-full"
+            v-model="inputKeyword" />
           <button class="absolute right-3 top-4 cursor-pointer">
-            <SearchIcon />
+            <div class="p-2 w-2 h-2 bg-slate-700 rounded-3xl"></div>
           </button>
         </div>
         <div class="dropdown-container lg:hidden">
           <label htmlFor="category" class="lg:hidden mb-2"> Category </label>
-          <Select
-            v-model="selectedCategory"
-            @update:modelValue="handleSelector">
+          <Select v-model="inputCate">
             <SelectTrigger class="w-full h-12 rounded-lg border">
               <SelectValue placeholder="Categories" />
             </SelectTrigger>
@@ -80,15 +79,8 @@ let postLimit = ref(10);
 let inputKeyword = ref();
 let inputCate = ref();
 
-const handleSelector = (selectedValue: string) => {
-  inputCate.value = Number(selectedValue);
-  //console.log(inputCate);
-};
-
 const handleCateClick = (value: string) => {
-  console.log("check if value is num:", value);
   inputCate.value = Number(value);
-  //console.log(inputCate);
 };
 
 const getAllPosts = async () => {
@@ -116,23 +108,17 @@ const filterPosts = async (newCate: number, newKeyword: string) => {
   try {
     console.log("Filtered");
     let endpoint = ``;
-    // if (inputCate.value !== 0 && inputKeyword.value !== "") {
-    //   console.log(`F Condition I`);
-    //   endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${inputCate.value}&keyword=${inputKeyword.value}`;
-    // }
-    // if (inputCate.value !== 0 && inputKeyword.value === "") {
-    //   console.log(`F Condition II`);
-    // }
-    endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${newCate}`;
-    // if (inputCate.value === 0 && inputKeyword.value !== "") {
-    //   console.log(`F Condition III`);
-    //   endpoint = `/api/allposts/getposts?limit=${postLimit.value}&keyword=${inputKeyword.value}`;
-    // }
+    if ((newCate && newCate !== 0) || newKeyword !== "") {
+      endpoint = `/api/allposts/getposts?limit=${postLimit.value}&category=${newCate}&keyword=${newKeyword}`;
+    } else {
+      endpoint = `/api/allposts/getposts?limit=${postLimit.value}`;
+    }
+
     console.log("endpoint: ");
     console.log(endpoint);
     const res = await axios.get(endpoint);
-    refPosts.value = res.data.data;
     console.log("filtered:", refPosts.value);
+    refPosts.value = res.data.data;
   } catch (e) {
     const error = e as Error;
     console.log(error.message);
