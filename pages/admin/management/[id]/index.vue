@@ -1,11 +1,11 @@
 <script setup lang="ts">
-
 interface Category {
   id: number;
   name: string;
 }
 
 import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import {
   Select,
   SelectContent,
@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import Quill from "~/components/Quill.vue";
 import axios from "axios";
 
+const route = useRoute(); // ใช้ Vue Router เพื่อดึง id จาก URL
+
 const categories = ref<Category[]>([]);
 const imageFile = ref<File | null>(null);
 const imageUrl = ref<string | null>(null);
@@ -26,6 +28,8 @@ const content = ref("");
 const id_category = ref<string | undefined>(undefined);
 const author = ref<string>("John Doe");
 const title = ref<string>("");
+const id = ref<string | null>(route.params.id as string | null); // ดึงค่า id จากพารามิเตอร์ของ URL
+const cat = ref("")
 
 const fetchCategories = async () => {
   try {
@@ -33,6 +37,21 @@ const fetchCategories = async () => {
     categories.value = response.data.data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+const fetchArticle = async (articleId: string) => {
+  try {
+    const response = await axios.get(`/api/admin/article/${articleId}`);
+    const article = response.data.data[0];
+    title.value = article.title;
+    introduction.value = article.description;
+    content.value = article.content;
+    author.value = article.author;
+    cat.value = article.categories.name;
+    imageUrl.value = article.image;
+  } catch (error) {
+    console.error("Error fetching article:", error);
   }
 };
 
@@ -44,57 +63,27 @@ const handleImageUpload = (event: Event) => {
   }
 };
 
-// ฟังก์ชันส่งข้อมูล API
-const handleSubmit = async (status: number) => {
-  if (!title.value || !id_category.value || !content.value) {
-    alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("title", title.value);
-  formData.append("content", content.value);
-  formData.append("introduction", introduction.value);
-  formData.append("author", author.value);
-  formData.append("id_category", id_category.value);
-  formData.append("status", String(status));
-
-  if (imageFile.value) {
-    formData.append("thumbnail", imageFile.value);
-  }
-
-  try {
-    const response = await axios.post("/api/admin/post", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    alert("บันทึกข้อมูลสำเร็จ");
-    console.log(response.data);
-  } catch (error) {
-    console.error("Error uploading:", error);
-    alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
-  }
-};
-
 onMounted(() => {
   fetchCategories();
+  if (id.value) {
+    fetchArticle(id.value);
+  }
 });
 </script>
+
 
 <template>
   <main class="flex-1 p-8 bg-gray-50 overflow-auto">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-semibold">Create article</h2>
+      <h2 class="text-2xl font-semibold">{{ id ? 'Edit' : 'Create' }} article</h2>
       <div class="space-x-2">
         <Button
           class="px-8 py-2 rounded-full"
           variant="outline"
-          @click="handleSubmit(1)"
         >
           Save as draft
         </Button>
-        <Button class="px-8 py-2 rounded-full" @click="handleSubmit(2)">
+        <Button class="px-8 py-2 rounded-full">
           Save and publish
         </Button>
       </div>
@@ -135,7 +124,7 @@ onMounted(() => {
 
       <div>
         <label for="category">Category</label>
-        <Select v-model="id_category">
+        <Select v-model="cat">
           <SelectTrigger
             class="max-w-lg mt-1 py-3 rounded-sm text-muted-foreground focus:ring-0 focus:ring-offset-0 focus:border-muted-foreground"
           >
@@ -145,7 +134,7 @@ onMounted(() => {
             <SelectItem
               v-for="item in categories"
               :key="item.id"
-              :value="String(item.id)"
+              :value="item.name"
             >
               {{ item.name }}
             </SelectItem>

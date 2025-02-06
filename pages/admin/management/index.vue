@@ -21,7 +21,7 @@ interface Article {
   };
 }
 
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +52,7 @@ const fetchCategories = async () => {
   }
 };
 
+
 const articles = ref<Article[]>([]);
 const fetchArticles = async () => {
   try {
@@ -69,7 +70,7 @@ const selectedCategory = ref("");
 
 // Pagination state
 const currentPage = ref(1);
-const perPage = ref(5); // จำนวนบทความต่อหน้า
+const perPage = ref(8); // จำนวนบทความต่อหน้า
 
 // กรองบทความตาม search, status และ category
 const filteredArticles = computed(() => {
@@ -121,6 +122,10 @@ const router = useRouter();
 const navigate = (path: string) => {
   router.push(path);
 };
+
+watch([searchQuery, selectedStatus, selectedCategory], () => {
+  currentPage.value = 1;
+});
 
 onMounted(async () => {
   isLoading.value = true;
@@ -197,7 +202,7 @@ onMounted(async () => {
                 </span>
               </TableCell>
               <TableCell class="text-right">
-                <Button variant="ghost" size="sm" @click="navigate(`/admin/article-management/edit/${article.id}`)">
+                <Button variant="ghost" size="sm" @click="navigate(`/admin/management/${article.id}`)">
                   Edit
                 </Button>
                 <Button variant="ghost" size="sm" @click="handleDelete(article.id)">
