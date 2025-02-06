@@ -3,8 +3,11 @@ import { ref, onMounted } from "vue";
 import axios from "axios"; // นำเข้า axios
 import Sidebar from "~/components/admin/Sidebar.vue";
 import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
+const id = ref(route.params.id);
 
 // ประกาศ type ของ category
 interface Category {
@@ -14,11 +17,23 @@ interface Category {
 
 // สร้างตัวแปรที่จะเก็บข้อมูล category
 const categories = ref<Category[]>([]);
-// console.log("fetching data category", categories);
+// console.log("fetching data category", categories.value);
+// console.log("Category Name:", categories.value[0].name);
+
+// ใช้ watch เพื่อติดตามการเปลี่ยนแปลงของ categories
+watch(
+  categories,
+  (newCategories) => {
+    if (newCategories.length > 0) {
+      console.log("Category Name:", newCategories[0].name);
+    }
+  },
+  { immediate: true }
+);
 
 // สร้างตัวแปรสำหรับ input
 const searchQuery = ref("");
-console.log("searchQuery1",searchQuery.value)
+console.log("searchQuery1", searchQuery.value);
 
 // ฟังก์ชันเพื่อจัดการการส่งข้อมูล POST
 const handleSubmit = async (event: Event) => {
@@ -30,19 +45,34 @@ const handleSubmit = async (event: Event) => {
     return;
   }
 
-  // ส่งข้อมูลที่ไม่ว่างเปล่า
   try {
-    const response = await axios.post("/api/categories", {
+    const response = await axios.put("/api/categories", {
+      id: id.value,
       name: searchQuery.value,
     });
-    console.log("Category saved:", response.data);
+    // เมื่อการอัปเดตสำเร็จ
+    console.log("Category updated successfully:", response.data);
     router.push("/admin/category");
   } catch (error) {
-    console.error("Error saving category:", error);
+    // หากเกิดข้อผิดพลาด
+    console.error("Error updating category:", error);
   }
 };
-onMounted(() => {
-  console.log("searchQuery onMounted3:", searchQuery.value);
+
+// ใช้ onMounted เพื่อดึงข้อมูลจาก API ตอนที่เปิดหน้า
+onMounted(async () => {
+  try {
+    const response = await axios.get(`/api/categories?id=${id.value}`);
+    console.log("Fetched Categories:", response.data);
+    categories.value = response.data.categories;
+
+    // หาก categories มีข้อมูลและมีค่าของ category ที่ดึงมา
+    if (categories.value.length > 0) {
+      searchQuery.value = categories.value[0].name; // กำหนดค่าให้ searchQuery
+    }
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
 });
 </script>
 
@@ -59,12 +89,11 @@ onMounted(() => {
           class="w-full flex flex-row h-[96px] justify-between items-center px-14 min-w-[900px]"
         >
           <div class="text-2xl font-medium whitespace-nowrap">
-            Create category
+            Edit category
           </div>
           <button
             class="px-10 bg-brown-600 text-white rounded-full py-3 flex items-center gap-2 text-start"
             type="submit"
-
           >
             Save
           </button>

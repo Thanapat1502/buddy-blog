@@ -19,7 +19,7 @@ interface Category {
 
 // สร้างตัวแปรที่จะเก็บข้อมูล category
 const categories = ref<Category[]>([]);
-// console.log("fetching data category", categories);
+console.log("fetching data category", categories);
 
 // ใช้ onMounted เพื่อดึงข้อมูลจาก API ตอนที่เปิดหน้า
 onMounted(async () => {
@@ -27,10 +27,28 @@ onMounted(async () => {
     const response = await axios.get("/api/categories");
     console.log("Fetched Categories:", response.data); // เพิ่ม log เพื่อดูข้อมูล
     categories.value = response.data.categories;
+    // จัดเรียงข้อมูล categories ตาม id
+    categories.value.sort((a, b) => a.id - b.id);
   } catch (error) {
     console.error("Error fetching categories:", error);
   }
 });
+
+const handleDelete = async (id: number) => {
+  try {
+    const response = await axios.delete(`/api/categories?id=${id}`);
+    if (response.data.success) {
+      categories.value = categories.value.filter(
+        (category) => category.id !== id
+      );
+      console.log("Category deleted successfully");
+    } else {
+      console.log("Failed to delete category");
+    }
+  } catch (error) {
+    console.log("Error deleting category:", error);
+  }
+};
 </script>
 
 <template>
@@ -78,13 +96,15 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-            <div class="flex flex-col border border-brown-300 rounded-xl overflow-hidden">
+            <div
+              class="flex flex-col border border-brown-300 rounded-xl overflow-hidden"
+            >
               <table class="w-full">
                 <!-- Table Header -->
                 <thead>
                   <tr>
                     <th
-                      class="px-4 py-2 flex justify-start items-center font-normal shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] h-[48px] "
+                      class="px-4 py-2 flex justify-start items-center font-normal shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] h-[48px]"
                     >
                       Category
                     </th>
@@ -93,9 +113,9 @@ onMounted(async () => {
                 <!-- Table Body -->
                 <tbody>
                   <tr
-                    v-for="category in categories"
+                    v-for="(category, index) in categories"
                     :key="category.id"
-                    :class="category.id % 2 === 0 ? 'bg-brown-200' : ''"
+                    :class="index % 2 === 0 ? 'bg-brown-200' : ''"
                     class="font-medium text-brown-500 last:rounded-b-lg"
                   >
                     <td
@@ -105,7 +125,10 @@ onMounted(async () => {
                       {{ category.name }}
                       <!-- for button category edit and trash -->
                       <div class="flex gap-6">
-                        <button class="group">
+                        <button
+                          class="group"
+                          @click="router.push(`/admin/category/${category.id}`)"
+                        >
                           <div class="group-hover:hidden">
                             <Edit />
                           </div>
@@ -116,7 +139,10 @@ onMounted(async () => {
                             <EditHover />
                           </div>
                         </button>
-                        <button class="group">
+                        <button
+                          class="group"
+                          @click="handleDelete(category.id)"
+                        >
                           <div class="group-hover:hidden">
                             <Trash />
                           </div>
